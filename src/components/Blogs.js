@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
-import { logoutUser } from "../reducers/userReducer"
-import blogService from '../services/blogService'
+import { voteBlog } from "../reducers/blogReducer"
+import { deleteBlog } from "../reducers/blogReducer"
 
 class BlogList extends React.Component {
 
@@ -17,12 +17,6 @@ class BlogList extends React.Component {
         this.setState({ visible: !this.state.visible });
       };
 
-    logOut = (event) => {
-        event.preventDefault()
-          window.localStorage.removeItem('loggedBlogappUser')
-          this.props.logoutUser(this.props.user.name)
-        }
-
     authorizeForDelete = (blogUser) => {
         if (blogUser === this.props.user.id )
         {
@@ -37,37 +31,7 @@ class BlogList extends React.Component {
           return false
         }
       }
-
-      deleteBlog = async (id, title) => {
-        const result = window.confirm("Poistetaanko käyttäjän tiedot?")
-        if(result)
-        try{
-          blogService.remove(id)
-        this.setState({ success: `Blog '${title}' deleted.`})
-        this.handleErrorAndSuccess("success")
-        }
-        catch(exception)
-        {
-        this.setState({ error: `Failed to delete blog.` + exception.message})
-        this.handleErrorAndSuccess("error")
-        }
-      }
-
-      updateBlog = async (targetId, currentLikes, targetTitle) => {
-        try{
-        const object = {
-          likes: currentLikes + 1
-        }
-        blogService.update(targetId, object)
-        this.setState({ success: `Blog '${targetTitle}' liked.`})
-        this.handleErrorAndSuccess("success")
-      }
-      catch(exception) {
-        this.setState({ error: `Failed to update blog.` + exception.message})
-        this.handleErrorAndSuccess("error")
-      }
-      }
-
+      
     render(){
         const hideWhenVisible = { display: this.state.visible ? "none" : "" };
         const showWhenVisible = { display: this.state.visible ? "" : "none" };
@@ -76,7 +40,7 @@ class BlogList extends React.Component {
 
 
         if (this.authorizeForDelete(blog.user) === true) {
-            deleteButton = <button onClick={() => this.deleteBlog(blog.id, blog.title)}>Delete</button>
+            deleteButton = <button onClick={() => this.props.deleteBlog(blog.id, blog.title)}>Delete</button>
           }
 
     return (
@@ -88,7 +52,7 @@ class BlogList extends React.Component {
           <h3 onClick={this.toggleVisibility}>{blog.title} by {blog.author}</h3>
           <h4>
           URL: {blog.url} <p />
-          Likes: {blog.likes} <button onClick={() => this.updateBlog(blog.id, blog.likes, blog.title)}>Like</button><p />
+          Likes: {blog.likes} <button onClick={() => this.props.voteBlog(blog.id, blog.likes, blog.title)}>Like</button><p />
           User who added: {blog.user}
           <p />
           {deleteButton}
@@ -99,6 +63,7 @@ class BlogList extends React.Component {
           }    
 
 }
+
   const mapStateToProps = state => {
     return {
       user: state.user
@@ -107,7 +72,7 @@ class BlogList extends React.Component {
   
   const connectedBlogList = connect(
     mapStateToProps,
-    { logoutUser, }
+    { voteBlog, deleteBlog, }
   )(BlogList);
   
 

@@ -8,8 +8,6 @@ import { inputUsername } from "../reducers/userReducer"
 import { errorNotification } from "../reducers/notificationReducer"
 import { loginUser } from "../reducers/userReducer"
 
-
-
 class LoginForm extends React.Component {
   
       handleUsernameFieldChange = event => {

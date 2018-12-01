@@ -60,7 +60,7 @@ export const loginUser = (user, name, id) => {
       name: name,
       id: id
       })
-
+     
       dispatch({
       type: "SUCCESS_NOTIFICATION",
       message: "Logged in as " + name
@@ -71,7 +71,7 @@ export const loginUser = (user, name, id) => {
           type: "CLEAR_NOTIFICATION",
           content: "",
         })
-      }, 5000);      
+      }, 1000);        // Welcome Header hoitaa tämän jo, joten siivotaan tämä nopeasti pois
       
     };
   };
