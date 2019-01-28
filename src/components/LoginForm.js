@@ -1,5 +1,4 @@
 import React from 'react'
-//import PropTypes from 'prop-types'
 import loginService from "../services/loginService"
 import blogService from "../services/blogService"
 import { connect } from "react-redux";

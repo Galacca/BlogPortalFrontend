@@ -30,19 +30,4 @@ export const initializeUsers = () => {
     }
   }
 
-  /*
-export const initializeUsers = () => {
-  return async (dispatch) => {
-    userService.getAll().then(users =>
-      dispatch({
-        type: 'INITIALIZE_USERS',
-        users
-      })
-    )
-
-  }
-}
-
-*/
-
 export default usersReducer
