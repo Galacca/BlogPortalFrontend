@@ -5,14 +5,20 @@ import { errorNotification } from './reducers/notificationReducer'
 import { initializeNotification } from './reducers/notificationReducer'
 import { loginUser } from "./reducers/userReducer"
 import { connect } from 'react-redux'
-import { blogInitialization} from './reducers/blogReducer'
+import { blogInitialization } from './reducers/blogReducer'
 import LoginForm from "./components/LoginForm"
 import blogService from "./services/blogService"
 import { initializeUser } from "./reducers/userReducer"
+import { initializeUsers } from "./reducers/usersReducer"
 import Blogs from "./components/Blogs"
 import LoggedInHeader from "./components/LoggedInHeader"
 import Togglable from "./components/Toggle"
 import NewBlog from './components/NewBlog'
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
+import Users from "./components/Users"
+import User from "./components/User"
+import BlogRow from './components/BlogRow'
+
 
 class App extends React.Component {
 
@@ -27,6 +33,7 @@ class App extends React.Component {
   componentDidMount() {
     this.props.initializeNotification()
     this.props.blogInitialization()
+    this.props.initializeUsers()
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
     
   if (loggedUserJSON) {
@@ -45,6 +52,8 @@ class App extends React.Component {
     this.setState({ [event.target.name]: event.target.value })
   }
   
+        
+  
   render() {
     if (this.props.loggedIn === false) {
     return (
@@ -54,13 +63,22 @@ class App extends React.Component {
       </div>
     );
     }
+    
     return(
       <div>
         <Notification />  
+        <Router>
+          <div>
+        <Link to='/'>Blogs </Link>
+        <Link to='/users'>Users</Link>
         <LoggedInHeader />
+        
         <Togglable buttonLabel="Add new blog">
         <NewBlog handleFieldChange={this.handleFieldChange} newTitle={this.state.newTitle} newUrl={this.state.newUrl} />
         </Togglable>
+        <Route exact path='/' render={() =>
+        <div>
+          <u><h2>Blogs</h2></u><p />
         {this.props.blogs
         .sort((blogA, blogB) => {
           if (blogA.likes > blogB.likes) return -1;
@@ -68,12 +86,38 @@ class App extends React.Component {
           return 0;
         })
         .map(blog => 
-          <Blogs blog={blog} key={blog.id} />
+          <BlogRow blog={blog} key={blog.id} />
           )}
+          
+          </div>
+          } />
+
+          <Route path='/blogs/:id' render={
+              ({ match, history }) =>
+                <Blogs
+                  blogId={match.params.id}
+                  history={history}
+                />
+            } />
+
+            <Route exact path='/users' render={() => <Users/> } />
+
+            <Route path='/users/:id' render={
+              ({ match }) => <User userId={match.params.id} />
+            } />
+
+        </div>
+          </Router>
       </div>
+
     )
   }
   }
+
+  
+  
+ 
+  
 
   const mapStateToProps = state => {
     return {
@@ -84,5 +128,5 @@ class App extends React.Component {
 
 export default connect(
   mapStateToProps,
-  { successNotification, errorNotification, initializeNotification, loginUser, blogInitialization, initializeUser, }
+  { successNotification, errorNotification, initializeNotification, loginUser, blogInitialization, initializeUser, initializeUsers }
 )(App)

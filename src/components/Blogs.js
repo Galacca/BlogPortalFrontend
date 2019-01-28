@@ -1,79 +1,57 @@
-import React from "react";
-import { connect } from "react-redux";
-import { voteBlog } from "../reducers/blogReducer"
-import { deleteBlog } from "../reducers/blogReducer"
+import React from 'react'
+import { connect } from 'react-redux'
+import { voteBlog, deleteBlog } from "../reducers/blogReducer"
 
-class BlogList extends React.Component {
+class Blog extends React.Component {
+  
+  remove = () => {
+    this.props.deleteBlog(this.props.blog)
+    this.props.history.push('/')
+  }
 
-    constructor(props) {
-        super(props);
-        this.state = {
-          visible: false,
-        };
-        
-      }
-
-      toggleVisibility = () => {
-        this.setState({ visible: !this.state.visible });
-      };
-
-    authorizeForDelete = (blogUser) => {
-        if (blogUser === this.props.user.id )
-        {
-          return true
-        }
-        else if (blogUser === undefined)
-        {
-          return true
-        }
-        else
-        {
-          return false
-        }
-      }
-      
-    render(){
-        const hideWhenVisible = { display: this.state.visible ? "none" : "" };
-        const showWhenVisible = { display: this.state.visible ? "" : "none" };
-        const {blog} = this.props
-        let deleteButton
-
-
-        if (this.authorizeForDelete(blog.user) === true) {
-            deleteButton = <button onClick={() => this.props.deleteBlog(blog.id, blog.title)}>Delete</button>
-          }
+  render() {
+    const { blog } = this.props
+    
+    if (blog === null || blog === undefined) {
+      return null
+    }
+    
+    const contentStyle = {
+      margin: 5,
+    }
+    
+    const deletable = blog.user === undefined || blog.user === this.props.user.id
 
     return (
-        <div>
-        <div style={hideWhenVisible}>
-          <h3 onClick={this.toggleVisibility}>{blog.title} by {blog.author}</h3>
-        </div>
-        <div style={showWhenVisible}>
-          <h3 onClick={this.toggleVisibility}>{blog.title} by {blog.author}</h3>
-          <h4>
-          URL: {blog.url} <p />
-          Likes: {blog.likes} <button onClick={() => this.props.voteBlog(blog.id, blog.likes, blog.title)}>Like</button><p />
-          User who added: {blog.user}
-          <p />
-          {deleteButton}
-          </h4>
+      <div>
+        <h2>{blog.title} {blog.author}</h2>
+        <div style={contentStyle} className='content'>
+          <div>
+            <a href={blog.url}>{blog.url}</a>
+          </div>
+          <div>
+            {blog.likes} Likes <button onClick={() => this.props.voteBlog(blog.id, blog.likes, blog.title)}>Like</button>
+          </div>
+          {deletable && <div><button onClick={this.remove}>Delete</button></div>}
         </div>
       </div>
-      )
-          }    
-
+    )
+  }
 }
 
-  const mapStateToProps = state => {
-    return {
-      user: state.user
-    };
-  };
-  
-  const connectedBlogList = connect(
-    mapStateToProps,
-    { voteBlog, deleteBlog, }
-  )(BlogList);
-  
+const mapStateToProps = (state, props) => {
+  const { blogId } = props
 
-  export default connectedBlogList;
+  if (state.blogs === null) {
+    return { blog: null }
+  }
+
+  return {
+    blog: state.blogs.find(blog => blog.id === blogId),
+    user: state.user
+  }
+}
+
+export default connect(mapStateToProps, {
+ voteBlog, deleteBlog
+})(Blog)
