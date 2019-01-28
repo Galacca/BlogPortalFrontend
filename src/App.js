@@ -22,14 +22,6 @@ import BlogRow from './components/BlogRow'
 
 class App extends React.Component {
 
-  constructor(props) {
-    super(props)
-    this.state = {
-      newTitle: "",
-      newUrl: "",
-    }
-  }
-
   componentDidMount() {
     this.props.initializeNotification()
     this.props.blogInitialization()
@@ -45,14 +37,6 @@ class App extends React.Component {
     this.props.initializeUser()
   }
   } 
-
-  // Tätä ei itseasiassa käytä kuin yksi komponentti joten se voisi yhtä hyvin olla NewBlog.js sisällä
-  // mutta otin tämän PropTypes harjoituksena
-  handleFieldChange = (event) => {
-    this.setState({ [event.target.name]: event.target.value })
-  }
-  
-        
   
   render() {
     if (this.props.loggedIn === false) {
@@ -74,7 +58,7 @@ class App extends React.Component {
         <LoggedInHeader />
         
         <Togglable buttonLabel="Add new blog">
-        <NewBlog handleFieldChange={this.handleFieldChange} newTitle={this.state.newTitle} newUrl={this.state.newUrl} />
+        <NewBlog />
         </Togglable>
         <Route exact path='/' render={() =>
         <div>

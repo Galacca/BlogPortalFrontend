@@ -4,8 +4,8 @@ import { voteBlog, deleteBlog } from "../reducers/blogReducer"
 
 class Blog extends React.Component {
   
-  remove = () => {
-    this.props.deleteBlog(this.props.blog)
+  remove = (blogId, blogTitle) => {
+    this.props.deleteBlog(blogId, blogTitle)
     this.props.history.push('/')
   }
 
@@ -32,7 +32,7 @@ class Blog extends React.Component {
           <div>
             {blog.likes} Likes <button onClick={() => this.props.voteBlog(blog.id, blog.likes, blog.title)}>Like</button>
           </div>
-          {deletable && <div><button onClick={this.remove}>Delete</button></div>}
+          {deletable && <div><button onClick={() => this.remove(blog.id, blog.title)}>Delete</button></div>}
         </div>
       </div>
     )

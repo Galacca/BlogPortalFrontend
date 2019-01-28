@@ -17,7 +17,7 @@ class BlogRow extends React.Component {
     return (
       <div style={blogStyle}>
         <div>
-          <Link to={`blogs/${blog.id}`}>{blog.title} {blog.author}</Link>
+          <Link to={`blogs/${blog.id}`}>{blog.title} {blog.author} {blog.id}</Link>
         </div>
       </div>
     )

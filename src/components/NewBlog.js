@@ -1,27 +1,26 @@
 import React from "react";
-import PropTypes from 'prop-types'
 import { connect } from "react-redux";
 import { addBlog } from "../reducers/blogReducer"
 
 class NewBlog extends React.Component {
 
-  static propTypes = {
-    handleFieldChange: PropTypes.func.isRequired,
-    newTitle: PropTypes.string.isRequired,
-    newUrl: PropTypes.string.isRequired,
+  constructor(props) {
+    super(props)
+    this.state = {
+      newTitle: "",
+      newUrl: "",
+    }
   }
 
-  
+  handleFieldChange = (event) => {
+    this.setState({ [event.target.name]: event.target.value })
+  }
+
   render(){
-    let {
-      handleFieldChange,
-      newTitle,
-      newUrl
-    } = this.props;
 
     const createBlog = (event) => {
       event.preventDefault()
-      this.props.addBlog(newTitle, newUrl, this.props.user.name)
+      this.props.addBlog(this.state.newTitle, this.state.newUrl, this.props.user.name)
     }
  
   return (
@@ -30,14 +29,14 @@ class NewBlog extends React.Component {
         <input
          name={"newTitle"}
          type={"text"}
-         value={newTitle}
-         onChange={handleFieldChange} />
+         value={this.newTitle}
+         onChange={this.handleFieldChange} />
         URL:
         <input
          name={"newUrl"}
          type={"text"}
-         value={newUrl}
-         onChange={handleFieldChange} />
+         value={this.newUrl}
+         onChange={this.handleFieldChange} />
         <p />
         <button type="submit">Save</button>
       </form>

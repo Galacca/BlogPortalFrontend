@@ -102,6 +102,7 @@ const blogReducer = (store = [], action) => {
       url: newUrl,
       author: author
     }
+    
     const data = await blogService.create(object)
     dispatch({
       type: "ADD",
