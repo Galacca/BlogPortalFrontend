@@ -1,14 +1,17 @@
-import React from "react";
-import { connect } from "react-redux";
-import { addBlog } from "../reducers/blogReducer"
+/* eslint-disable react/jsx-one-expression-per-line */
+/* eslint-disable react/jsx-filename-extension */
+/* eslint-disable react/prop-types */
+/* eslint-disable react/destructuring-assignment */
+import React from 'react'
+import { connect } from 'react-redux'
+import { addBlog } from '../reducers/blogReducer'
 
 class NewBlog extends React.Component {
-
   constructor(props) {
     super(props)
     this.state = {
-      newTitle: "",
-      newUrl: "",
+      newTitle: '',
+      newUrl: '',
     }
   }
 
@@ -16,45 +19,43 @@ class NewBlog extends React.Component {
     this.setState({ [event.target.name]: event.target.value })
   }
 
-  render(){
-
+  render() {
     const createBlog = (event) => {
       event.preventDefault()
       this.props.addBlog(this.state.newTitle, this.state.newUrl, this.props.user.name)
     }
- 
-  return (
-    <form onSubmit={createBlog}>
+
+    return (
+      <form onSubmit={createBlog}>
         Title:
         <input
-         name={"newTitle"}
-         type={"text"}
-         value={this.newTitle}
-         onChange={this.handleFieldChange} />
+          name="newTitle"
+          type="text"
+          value={this.newTitle}
+          onChange={this.handleFieldChange}
+        />
         URL:
         <input
-         name={"newUrl"}
-         type={"text"}
-         value={this.newUrl}
-         onChange={this.handleFieldChange} />
+          name="newUrl"
+          type="text"
+          value={this.newUrl}
+          onChange={this.handleFieldChange}
+        />
         <p />
         <button type="submit">Save</button>
       </form>
-  )
+    )
+  }
 }
 
-}
-
-const mapStateToProps = state => {
-  return {
-    user: state.user
-  };
-};
+const mapStateToProps = state => ({
+  user: state.user,
+})
 
 const connectedNewBlog = connect(
   mapStateToProps,
-  { addBlog }
-)(NewBlog);
+  { addBlog },
+)(NewBlog)
 
 
-export default connectedNewBlog;
+export default connectedNewBlog
