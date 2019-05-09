@@ -1,11 +1,8 @@
-/* eslint-disable max-len */
-/* eslint-disable react/jsx-one-expression-per-line */
-/* eslint-disable react/button-has-type */
-/* eslint-disable react/jsx-filename-extension */
 /* eslint-disable react/prop-types */
 /* eslint-disable react/destructuring-assignment */
 import React from 'react'
 import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 import { voteBlog, deleteBlog } from '../reducers/blogReducer'
 
 class Blog extends React.Component {
@@ -41,10 +38,12 @@ class Blog extends React.Component {
           </div>
           <div>
             {blog.likes}
-            {' '}Likes{' '}
-            <button onClick={() => this.props.voteBlog(blog.id, blog.likes, blog.title)}>Like</button>
+            {' '}
+            Likes
+            {' '}
+            <button type="button" onClick={() => this.props.voteBlog(blog.id, blog.likes, blog.title)}>Like</button>
           </div>
-          {deletable && <div><button onClick={() => this.remove(blog.id, blog.title)}>Delete</button></div>}
+          {deletable && <div><button type="button" onClick={() => this.remove(blog.id, blog.title)}>Delete</button></div>}
         </div>
       </div>
     )
@@ -62,6 +61,11 @@ const mapStateToProps = (state, props) => {
     blog: state.blogs.find(blog => blog.id === blogId),
     user: state.user,
   }
+}
+
+Blog.propTypes = {
+  deleteBlog: PropTypes.func.isRequired,
+  voteBlog: PropTypes.func.isRequired,
 }
 
 export default connect(mapStateToProps, {

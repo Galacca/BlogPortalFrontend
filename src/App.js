@@ -1,14 +1,15 @@
 /* eslint-disable linebreak-style */
-/* eslint-disable react/jsx-filename-extension */
 /* eslint-disable react/prop-types */
 /* eslint-disable react/destructuring-assignment */
 
 import React from 'react'
 import { connect } from 'react-redux'
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
+import PropTypes from 'prop-types'
 import Notification from './components/Notification'
 import { successNotification, errorNotification, initializeNotification } from './reducers/notificationReducer'
-import { loginUser, initializeUser, initializeUsers } from './reducers/userReducer'
+import { loginUser, initializeUser } from './reducers/userReducer'
+import { initializeUsers } from './reducers/usersReducer'
 import { blogInitialization } from './reducers/blogReducer'
 import LoginForm from './components/LoginForm'
 import blogService from './services/blogService'
@@ -38,6 +39,9 @@ class App extends React.Component {
   }
 
   render() {
+    // PropType aiheuttaa turhaa motkotusta kun tämä ehtii olla undefined muutaman millisekunnin
+    // joten pistetään eslint hiljaiseksi.
+    // eslint-disable-next-line react/prop-types
     if (this.props.loggedIn === false) {
       return (
         <div>
@@ -106,16 +110,28 @@ class App extends React.Component {
   }
 }
 
-
 const mapStateToProps = state => ({
   loggedIn: state.user.loggedIn,
   blogs: state.blogs,
 })
 
+App.propTypes = {
+  initializeNotification: PropTypes.func.isRequired,
+  blogInitialization: PropTypes.func.isRequired,
+  initializeUsers: PropTypes.func.isRequired,
+  loginUser: PropTypes.func.isRequired,
+  initializeUser: PropTypes.func.isRequired,
+}
+
 export default connect(
   mapStateToProps,
   {
-    // eslint-disable-next-line max-len
-    successNotification, errorNotification, initializeNotification, loginUser, blogInitialization, initializeUser, initializeUsers,
+    successNotification,
+    errorNotification,
+    initializeNotification,
+    loginUser,
+    blogInitialization,
+    initializeUser,
+    initializeUsers,
   },
 )(App)

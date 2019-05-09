@@ -9,25 +9,21 @@ const usersReducer = (state = null, action) => {
   }
 }
 
-export const initializeUsers = () => {
-    return async (dispatch) => {
-      try{
-        const users = await usersService.getAll()
-        dispatch({
-          type: 'INIT_USERS',
-          data: users,
-            })
-      } catch (exception){
-        //Huom. En kutsu CLEAR_NOTIFICATION tarkoituksella. Kyseessä kuitenkin aika kriittinen virhe.
-        console.log(exception.message)
-        dispatch({
-          type: 'ERROR_NOTIFICATION',
-          message: "Failed to retrieve userlist from server. " +exception.message
-            })
-      }
-
-       
-    }
+export const initializeUsers = () => async (dispatch) => {
+  try {
+    const users = await usersService.getAll()
+    dispatch({
+      type: 'INIT_USERS',
+      data: users,
+    })
+  } catch (exception) {
+    // Huom. En kutsu CLEAR_NOTIFICATION tarkoituksella. Kyseessä kuitenkin aika kriittinen virhe.
+    console.log(exception.message)
+    dispatch({
+      type: 'ERROR_NOTIFICATION',
+      message: `Failed to retrieve userlist from server. ${exception.message}`,
+    })
   }
+}
 
 export default usersReducer
